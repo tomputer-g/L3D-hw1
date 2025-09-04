@@ -34,7 +34,7 @@ def dolly_zoom(
 
     renders = []
     
-    width = 5 # from Wikipedia formula
+    width = 5
     for fov in tqdm(fovs):
         # distance = 50
         distance = width / (2 * np.tan(0.5 * np.radians(fov))) # TODO: change this.
