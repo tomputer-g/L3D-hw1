@@ -62,7 +62,7 @@ def main():
         rend = renderer(mesh, cameras=cameras, lights=lights)
         img = rend.cpu().numpy()[0, ..., :3]
             
-        img *= 256
+        img *= 255
         img = img.astype('uint8')
         images_list.append(img)
     

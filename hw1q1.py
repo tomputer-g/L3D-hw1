@@ -43,7 +43,7 @@ def main():
 
     images_list = []
 
-    for i in tqdm(range(360), desc="Rendering cow..."):
+    for i in tqdm(range(0,360,10), desc="Rendering cow..."):
 
         theta = np.radians(i)
         c, s = np.cos(theta), np.sin(theta)
@@ -57,7 +57,7 @@ def main():
         rend = renderer(mesh, cameras=cameras, lights=lights)
         img = rend.cpu().numpy()[0, ..., :3]
             
-        img *= 256
+        img *= 255
         img = img.astype('uint8')
         images_list.append(img)
     
