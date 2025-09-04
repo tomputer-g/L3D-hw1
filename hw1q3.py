@@ -27,8 +27,13 @@ def main():
     vertices, faces = load_cow_mesh(cow_path)
     vertices = vertices.unsqueeze(0)  # (N_v, 3) -> (1, N_v, 3)
     faces = faces.unsqueeze(0)  # (N_f, 3) -> (1, N_f, 3)
-    textures = torch.ones_like(vertices)  # (1, N_v, 3)
-    textures = textures * torch.tensor([0.7, 0.7, 1])  # (1, N_v, 3)
+    zs = vertices[0,:,2]
+    z_max = torch.max(zs)
+    z_min = torch.min(zs)
+    color1 =  torch.tensor([[0,0,1]], dtype=torch.float32)
+    color2 = torch.tensor([[1,0,0]], dtype=torch.float32)
+    alphas = ((zs - z_min) / (z_max - z_min)).unsqueeze(1)
+    textures = (alphas @ color2 + (1 - alphas) @ color1).unsqueeze(0) # (1, N_v, 3)
     
     mesh = pytorch3d.structures.Meshes(
         verts=vertices,
@@ -43,7 +48,7 @@ def main():
 
     images_list = []
 
-    for i in tqdm(range(360), desc="Rendering cow..."):
+    for i in tqdm(range(0,360,10), desc="Rendering cow..."):
 
         theta = np.radians(i)
         c, s = np.cos(theta), np.sin(theta)
@@ -61,7 +66,7 @@ def main():
         img = img.astype('uint8')
         images_list.append(img)
     
-    create_gif(images_list, Path('out.gif'))
+    create_gif(images_list, Path('hw1q3_color.gif'))
 
 if __name__ == "__main__":
     main()
