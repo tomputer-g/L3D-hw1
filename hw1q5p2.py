@@ -74,28 +74,48 @@ def sample_torus_to_pointcloud(num_samples=200, device=None):
     
     return points, color
 
-def sample_trefoil_knot_to_pointcloud(num_samples=200, device=None):
+def sample_cyl_to_pointcloud(num_samples=200, device=None):
     if device is None:
         device = get_device()
 
-    Theta = torch.linspace(0, 2*np.pi, num_samples)
+    u = torch.linspace(0, np.pi, num_samples)
+    v = torch.linspace(0, 2*np.pi, num_samples)
+
+    u,v = torch.meshgrid(u, v)
+    r = 2
     
-    x = torch.sin(Theta) + 2 * torch.sin(2 * Theta)
-    y = torch.cos(Theta) - 2 * torch.cos(2 * Theta)
-    z = - torch.sin(3 * Theta)
+    x = r * np.cos(v)
+    y = r * np.sin(v)
+    z = u
 
     points = torch.stack((x.flatten(), y.flatten(), z.flatten()), dim=1)
     color = (points - points.min()) / (points.max() - points.min())
     
     return points, color
 
+# def sample_trefoil_knot_to_pointcloud(num_samples=200, device=None):
+#     if device is None:
+#         device = get_device()
+
+#     Theta = torch.linspace(0, 2*np.pi, num_samples)
+    
+#     x = torch.sin(Theta) + 2 * torch.sin(2 * Theta)
+#     y = torch.cos(Theta) - 2 * torch.cos(2 * Theta)
+#     z = - torch.sin(3 * Theta)
+
+#     points = torch.stack((x.flatten(), y.flatten(), z.flatten()), dim=1)
+#     color = (points - points.min()) / (points.max() - points.min())
+    
+#     return points, color
+
 def main():
     torus_pts, torus_color = sample_torus_to_pointcloud(num_samples=200)
     
     render_pointcloud_to_gif(V=torus_pts, rgb=torus_color, gif_path="hw1q5p2_torus.gif", downsample_factor=10)
     
-    trefoil_pts, trefoil_color = sample_trefoil_knot_to_pointcloud(num_samples=2000)
-    render_pointcloud_to_gif(V = trefoil_pts, rgb = trefoil_color, gif_path="hw1q5p2_trefoil.gif", downsample_factor=1)
-    
+    cyl_pts, cyl_color = sample_cyl_to_pointcloud(num_samples=200)
+
+    render_pointcloud_to_gif(V=cyl_pts, rgb=cyl_color, gif_path="hw1q5p2_cyl.gif", downsample_factor=1)
+
 if __name__ == "__main__":
     main()

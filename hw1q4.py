@@ -2,7 +2,6 @@
 Usage:
     python -m starter.camera_transforms --image_size 512
 """
-import argparse
 
 import matplotlib.pyplot as plt
 import pytorch3d
